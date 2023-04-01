@@ -12,7 +12,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.baidu.com/*", "https://www.jianshu.com/*"],
+      "matches": ["https://www.baidu.com/*"],
       "js": ["script.js", "otherScript.js"]
     }
   ],
