@@ -1,0 +1,21 @@
+{
+  "name": "my plugin",
+  "description": "修改百度、简书相关页面背景色和字体颜色",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action":{
+      "default_popup": "index.html",
+      "default_title": "Latest Covid Report"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.baidu.com/*", "https://www.jianshu.com/*"],
+      "js": ["script.js", "otherScript.js"]
+    }
+  ],
+  "manifest_version": 3,
+  "version": "1.0"
+}
