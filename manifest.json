@@ -1,19 +1,18 @@
 {
-  "name": "my plugin",
-  "description": "修改百度、简书相关页面背景色和字体颜色",
+  "name": "GitHub For DevOps",
+  "description": "A Google Chrome extension that can visualize DevOps evaluation metrics.",
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
   },
   "action":{
-      "default_popup": "index.html",
-      "default_title": "Latest Covid Report"
+      "default_popup": "index.html"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.baidu.com/*"],
-      "js": ["script.js", "otherScript.js"]
+      "matches": ["https://github.com/*"],
+      "js": ["script.js"]
     }
   ],
   "manifest_version": 3,

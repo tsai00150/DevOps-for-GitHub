@@ -8,8 +8,4 @@ async function fetchData() {
     document.getElementById("deathNew").innerHTML=record.data[0].deathNew;
 }
 
-
-console.log('my plugin start...');
 fetchData();
-// document.body.style.backgroundColor = '#20304d';
-// document.body.style.color = 'white';
