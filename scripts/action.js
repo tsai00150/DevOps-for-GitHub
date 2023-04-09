@@ -38,7 +38,7 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
     year - The actual year of the action
     custom - current cycle == 0, last cycle == 1, ...
      */
-    let actions = await getActions(owner, repo, deploymentWorkflow.concat(releaseWorkflow))
+    let actions = await getActions(owner, repo, deploymentWorkflow.concat(releaseWorkflow));
 
     let today = new Date();
     let filteredActions = [];
