@@ -150,27 +150,51 @@ function drawChart() {
     legend: { position: 'bottom' }
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('myChart1'));
+  var chart = new google.visualization.LineChart(document.getElementById('myChart'));
 
   chart.draw(data, options);
 }
 
 
-google.charts.load('current', {'packages':['corechart']});
+
+
+
+google.charts.load('current', {'packages':['corechart', 'bar']});
 google.charts.setOnLoadCallback(drawChart);
 
 const owner = 'appditto'
 const repo = 'natrium_wallet_flutter'
 document.getElementById("owner").innerHTML = owner;
 document.getElementById("repo").innerHTML = repo;
+document.getElementById("filteredActions").innerHTML = filteredActions;
+for(let action of filteredActions){
+  console.log(action);
+}
+document.getElementById("metrics").innerHTML = metrics;
 
-getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
-  .then(filteredActions => {
-      console.log(filteredActions)
-      document.getElementById("filteredActions").innerHTML = filteredActions;
-  });
-getDefectDensity(owner, repo, ['CI'])
-  .then(metrics => {
-      console.log(metrics);
-      document.getElementById("metrics").innerHTML = metrics;
-  });
+let dataSource = [['metric #','defect density']]
+let index = 1;
+for (let input of metrics){
+  dataSource.push(['metric'+index.toString(), input.toString()]);
+  index++;
+}
+console.log(dataSource)
+var data = google.visualization.arrayToDataTable(dataSource);
+
+var options = {
+  title: 'Defect Density',
+  bars: 'vertical'
+};
+
+var chart = new google.charts.Bar(document.getElementById('myChart2'));
+
+chart.draw(data, google.charts.Bar.convertOptions(options));
+
+// getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
+//   .then(filteredActions => {
+//       // console.log(filteredActions)
+//   });
+// getDefectDensity(owner, repo, ['CI'])
+//   .then(metrics => {
+//       // console.log(metrics)
+//   });
