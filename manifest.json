@@ -3,6 +3,7 @@
   "description": "A Google Chrome extension that can visualize DevOps evaluation metrics.",
   "icons": {
     "16": "icon.png",
+    "32": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
   },
@@ -14,5 +15,13 @@
       "type": "module"
   },
   "manifest_version": 3,
-  "version": "1.0"
+  "version": "1.0.1",
+  "sandbox": {
+    "pages": [
+      "index.html"
+    ]
+  },
+  "content_security_policy": {
+    "sandbox": "sandbox allow-scripts; script-src 'unsafe-inline' 'self' https://www.gstatic.com"
+  }
 }

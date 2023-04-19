@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>DevOps Metrics Popup</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+</head>
+
+
+<body>
+  <div class="container mt-3" style="width: 400px;">
+      <h1 class="text-center">DevOps Metrics</h1>
+  </div>
+
+  <div class="container mt-3" style="width: 400px;">
+      <h2 class="text-center">Deployment frequency</h2>
+  </div>
+
+  <canvas id="myChart1" width="400" height="400" style = "border: 1px solid #000000;"></canvas>
+
+  <div class="container mt-3" style="width: 400px;">
+      <h2 class="text-center">Defect Density</h2>
+  </div>
+
+</body>
+
+
+</html>
