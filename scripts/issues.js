@@ -4,6 +4,7 @@ export async function getIssues(owner, repo){
     let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/issues`);
     let record = await res.json();
     let issues = [];
+    console.log(record);
     for (let issue of record) {
         if (!('pull_request' in issue)){
             issues.push(issue);

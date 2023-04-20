@@ -134,67 +134,129 @@ async function getDefectDensity(owner, repo, deploymentWorkflow){
   return [metric1, metric2, metric3];
 }
 
-
 function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['Year', 'Sales', 'Expenses'],
-    ['2004',  1000,      400],
-    ['2005',  1170,      460],
-    ['2006',  660,       1120],
-    ['2007',  1030,      540]
+
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'Month');
+  data.addColumn('number', 'CI');
+  data.addColumn('number', 'DEPLOY_RELEASE');
+
+  data.addRows([
+    [1,  3, 0],
+    [2,  0, 0],
+    [3,  0, 0],
+    [4,  1, 0],
+    [5,  1, 1],
+    [6,  14, 1],
+    [7,  20, 2],
+    [8,  0, 0],
+    [9,  0, 0],
+    [10, 38, 4],
+    [11,  0,  0],
+    [12,  0,  0]
   ]);
 
   var options = {
-    title: 'Company Performance',
-    curveType: 'function',
-    legend: { position: 'bottom' }
+    chart: {
+      title: 'Box Office Earnings in First Two Weeks of Opening',
+      subtitle: 'in millions of dollars (USD)'
+    },
+    width: 900,
+    height: 500
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('myChart'));
+  var chart = new google.charts.Line(document.getElementById('myChart'));
 
-  chart.draw(data, options);
+  chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
 
 
 
-google.charts.load('current', {'packages':['corechart', 'bar']});
+google.charts.load('current', {'packages':['bar', 'line']});
 google.charts.setOnLoadCallback(drawChart);
 
 const owner = 'appditto'
 const repo = 'natrium_wallet_flutter'
 document.getElementById("owner").innerHTML = owner;
 document.getElementById("repo").innerHTML = repo;
-document.getElementById("filteredActions").innerHTML = filteredActions;
-for(let action of filteredActions){
-  console.log(action);
-}
-document.getElementById("metrics").innerHTML = metrics;
 
-let dataSource = [['metric #','defect density']]
-let index = 1;
-for (let input of metrics){
-  dataSource.push(['metric'+index.toString(), input.toString()]);
-  index++;
-}
-console.log(dataSource)
-var data = google.visualization.arrayToDataTable(dataSource);
+getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
+  .then(filteredActions => {
+      console.log(filteredActions)
+      document.getElementById("filteredActions").innerHTML = filteredActions;
+      
+      const counts = {};
+      const names = [];
+      const variables = [];
+      filteredActions.forEach(function (x) { 
+          counts[x] = (counts[x] || 0) + 1;
+          variables.push(x[0]+','+x[1].toString())
+          names.push(x[0]);
+      });
+      const set1 = new Set(variables);
+      const set2 = new Set(names);
+      const variableList = Array.from(set1);
+      const nameList = Array.from(set2);
+      let valueList = [];
+      for(let variable of variableList){
+          valueList.push(counts[variable]);
+      }
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'month');
+      for(let name of nameList){
+        data.addColumn('number', name);
+        console.log(name)  
+      }
+      
+      let rowsToAdd = [];
+      for(let i = 0; i < 12; i++){
+        let rowToAdd = [];
+        rowToAdd.push(i+1);
+        for(let name of nameList){
+          rowToAdd.push(counts[[name, i]] || 0);
+        }
+        rowsToAdd.push(rowToAdd);
+      }
 
-var options = {
-  title: 'Defect Density',
-  bars: 'vertical'
-};
+      console.log(rowsToAdd) 
+      data.addRows(rowsToAdd);
+    
+      var options = {
+        chart: {
+          title: 'Deployment Frequency',
+          subtitle: ''
+        },
+        width: 900,
+        height: 500
+      };
+    
+      var chart = new google.charts.Line(document.getElementById('myChart1'));
+    
+      chart.draw(data, google.charts.Line.convertOptions(options));
+      
+  });
+getDefectDensity(owner, repo, ['CI'])
+  .then(metrics => {
+      // console.log(metrics)
+      document.getElementById("metrics").innerHTML = metrics;
 
-var chart = new google.charts.Bar(document.getElementById('myChart2'));
+      let dataSource = [['metric #','defect density']]
+      let index = 1;
+      for (let input of metrics){
+        dataSource.push(['metric'+index.toString(), input.toString()]);
+        index++;
+      }
+      console.log(dataSource)
+      var data = google.visualization.arrayToDataTable(dataSource);
 
-chart.draw(data, google.charts.Bar.convertOptions(options));
+      var options = {
+        title: 'Defect Density',
+        bars: 'vertical'
+      };
 
-// getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
-//   .then(filteredActions => {
-//       // console.log(filteredActions)
-//   });
-// getDefectDensity(owner, repo, ['CI'])
-//   .then(metrics => {
-//       // console.log(metrics)
-//   });
+      var chart = new google.charts.Bar(document.getElementById('myChart2'));
+
+      chart.draw(data, google.charts.Bar.convertOptions(options));
+  });

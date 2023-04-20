@@ -3,6 +3,7 @@ export async function getActions(owner, repo, workflows) {
     let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/actions/runs`);
     let page1 = await res.json();
     let actions = [];
+    console.log(page1.workflow_runs);
     for (let run of page1.workflow_runs) {
         if (workflows.includes(run.name)){
             actions.push(run);
