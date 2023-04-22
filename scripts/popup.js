@@ -192,10 +192,10 @@ getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Da
         chart: {
           title: 'Deployment Frequency',
           subtitle: '',
-          legend: {position: 'in'}
         },
         width: 400,
-        height: 500
+        height: 250,
+        legend: {position: 'none'} 
       };
     
       var chart = new google.charts.Line(document.getElementById('myChart1'));
