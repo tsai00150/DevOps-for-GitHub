@@ -134,48 +134,13 @@ async function getDefectDensity(owner, repo, deploymentWorkflow){
   return [metric1, metric2, metric3];
 }
 
-function drawChart() {
 
-  var data = new google.visualization.DataTable();
-  data.addColumn('number', 'Month');
-  data.addColumn('number', 'CI');
-  data.addColumn('number', 'DEPLOY_RELEASE');
-
-  data.addRows([
-    [1,  3, 0],
-    [2,  0, 0],
-    [3,  0, 0],
-    [4,  1, 0],
-    [5,  1, 1],
-    [6,  14, 1],
-    [7,  20, 2],
-    [8,  0, 0],
-    [9,  0, 0],
-    [10, 38, 4],
-    [11,  0,  0],
-    [12,  0,  0]
-  ]);
-
-  var options = {
-    chart: {
-      title: 'Box Office Earnings in First Two Weeks of Opening',
-      subtitle: 'in millions of dollars (USD)'
-    },
-    width: 900,
-    height: 500
-  };
-
-  var chart = new google.charts.Line(document.getElementById('myChart'));
-
-  chart.draw(data, google.charts.Line.convertOptions(options));
-}
 
 
 
 
 
 google.charts.load('current', {'packages':['bar', 'line']});
-google.charts.setOnLoadCallback(drawChart);
 
 const owner = 'appditto'
 const repo = 'natrium_wallet_flutter'
@@ -184,7 +149,7 @@ document.getElementById("repo").innerHTML = repo;
 
 getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
   .then(filteredActions => {
-      console.log(filteredActions)
+      // console.log(filteredActions)
       document.getElementById("filteredActions").innerHTML = filteredActions;
       
       const counts = {};
@@ -207,7 +172,7 @@ getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Da
       data.addColumn('number', 'month');
       for(let name of nameList){
         data.addColumn('number', name);
-        console.log(name)  
+        // console.log(name)  
       }
       
       let rowsToAdd = [];
@@ -220,15 +185,16 @@ getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Da
         rowsToAdd.push(rowToAdd);
       }
 
-      console.log(rowsToAdd) 
+      // console.log(rowsToAdd) 
       data.addRows(rowsToAdd);
     
       var options = {
         chart: {
           title: 'Deployment Frequency',
-          subtitle: ''
+          subtitle: '',
+          legend: {position: 'in'}
         },
-        width: 900,
+        width: 400,
         height: 500
       };
     
@@ -253,7 +219,8 @@ getDefectDensity(owner, repo, ['CI'])
 
       var options = {
         title: 'Defect Density',
-        bars: 'vertical'
+        bars: 'vertical',
+        legend: {position: 'none'} 
       };
 
       var chart = new google.charts.Bar(document.getElementById('myChart2'));
