@@ -27,6 +27,9 @@
     <div id="myChart2" style="width: 400px; height: 250px"></div>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="scripts/popup.js"></script>
+    <script type="module">
+      import { drawChart } from './scripts/popup.js'
+      drawChart();
+    </script>
   </body>
 </html>
