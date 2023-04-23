@@ -3,7 +3,6 @@ export async function getActions(owner, repo, workflows) {
     let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/actions/runs`);
     let page1 = await res.json();
     let actions = [];
-    console.log(page1.workflow_runs);
     for (let run of page1.workflow_runs) {
         if (workflows.includes(run.name)){
             actions.push(run);
@@ -84,4 +83,76 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
             break;
     }
     return filteredActions;
+}
+
+export async function getUnitTest(owner, repo, workflows, jobname, steporder, stepname) {
+    /* 
+    This function only works with Python's unittest library. 
+    @param {array} workflows - the workflow name that we want to get unit test, ONLY ONE WORKFLOW IS ALLOWED
+    @param {string} jobname - the job name that has the unit test, ex: 'build (3.9)'
+    @param {int} steporder - the order of the step that has the unit test, ex: 4
+    @param {string} stepname - the step name that has the unit test, ex: 'Test with unittest'
+    @returns {array} each unit test is a list, format [passedTests, failedTests, errorTests, time]
+    */
+
+    let config = await fetch ('../config.json');
+    config = await config.json();
+
+    let actions = await getActions(owner, repo, workflows);
+    let unitTests = [];
+
+    for (let run of actions){
+        let logs = await fetch (`https://api.github.com/repos/${owner}/${repo}/actions/runs/${run.id}/logs`, {
+            headers: {
+                "Accept": "application/vnd.github+json",
+                "Authorization": `Bearer ${config.token}`,
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+        
+        let zipfile = await fetch (logs.url);
+        zipfile = zipfile.blob()
+        
+        let new_zip = new JSZip();
+        new_zip.loadAsync(zipfile)
+        .then(function(zip) {
+            return zip.file(jobname+"/"+steporder.toString()+'_'+stepname+".txt").async("string");
+        }).then(function (content) {
+
+            let testCountStr = content.match("Ran [0-9]+ tests in [0-9.]+s")
+            if (testCountStr !== null){
+                // the run has a unit test
+                let passedTests;
+                let failedTests;
+                let errorTests;
+
+                let testCount = parseInt(testCountStr[0].split(' ')[1]);
+                let testResult = content.match("(OK|FAILED.+)")[0];
+
+                if (testResult.slice(0,2) === "OK"){
+                    let testCount = parseInt(content.match("Ran [0-9]+ tests in [0-9.]+s")[0].split(' ')[1]);
+                    passedTests = testCount;
+                    failedTests = 0;
+                    errorTests = 0;
+                } else{
+                    if (testResult.match("failures=\\d+") !== null){
+                        failedTests = parseInt(testResult.match("failures=\\d+")[0].split('=')[1]);
+                    } else {
+                        failedTests = 0;
+                    }
+                    if (testResult.match("errors=\\d+") !== null){
+                        errorTests = parseInt(testResult.match("errors=\\d+")[0].split('=')[1]);
+                    } else {
+                        errorTests = 0;
+                    }
+                    passedTests = testCount - failedTests - errorTests;
+                }
+
+                unitTests.push([passedTests, failedTests, errorTests, run.created_at]);
+                console.log("Processed unit test run number: " + run.run_number)
+            }
+
+          });
+    }
+    return unitTests;
 }
