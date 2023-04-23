@@ -12,7 +12,7 @@ export async function drawChart(){
     getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
       .then(filteredActions => {
           // console.log(filteredActions)
-          document.getElementById("filteredActions").innerHTML = filteredActions;
+          // document.getElementById("filteredActions").innerHTML = filteredActions;
           
           const counts = {};
           const names = [];
@@ -54,10 +54,10 @@ export async function drawChart(){
             chart: {
               title: 'Deployment Frequency',
               subtitle: '',
-              legend: {position: 'in'}
             },
             width: 400,
-            height: 500
+            height: 250,
+            legend: {position: 'none'}
           };
         
           var chart = new google.charts.Line(document.getElementById('myChart1'));
@@ -68,25 +68,33 @@ export async function drawChart(){
     getDefectDensity(owner, repo, ['CI'])
       .then(metrics => {
           // console.log(metrics)
-          document.getElementById("metrics").innerHTML = metrics;
+          // document.getElementById("metrics").innerHTML = metrics;
 
-          let dataSource = [['metric #','defect density']]
+          // let dataSource = [['metric #','defect density']]
+          // let index = 1;
+          // for (let input of metrics){
+          //   dataSource.push(['metric'+index.toString(), input.toString()]);
+          //   index++;
+          // }
+          // // console.log(dataSource)
+          // var data = google.visualization.arrayToDataTable(dataSource);
+
+          // var options = {
+          //   title: 'Defect Density',
+          //   bars: 'vertical',
+          //   legend: {position: 'none'} 
+          // };
+
+          // var chart = new google.charts.Bar(document.getElementById('myChart2'));
+
+          // chart.draw(data, google.charts.Bar.convertOptions(options));
+
           let index = 1;
           for (let input of metrics){
-            dataSource.push(['metric'+index.toString(), input.toString()]);
+            document.getElementById('metric'+index.toString()+'Name').innerHTML = 'metric'+index.toString();
+            document.getElementById('metric'+index.toString()+'Value').innerHTML = input.toString();
             index++;
           }
-          console.log(dataSource)
-          var data = google.visualization.arrayToDataTable(dataSource);
 
-          var options = {
-            title: 'Defect Density',
-            bars: 'vertical',
-            legend: {position: 'none'} 
-          };
-
-          var chart = new google.charts.Bar(document.getElementById('myChart2'));
-
-          chart.draw(data, google.charts.Bar.convertOptions(options));
       });
 }
