@@ -30,27 +30,27 @@ export async function drawChart(){
           for(let variable of variableList){
               valueList.push(counts[variable]);
           }
-          var data = new google.visualization.DataTable();
-          data.addColumn('number', 'month');
+          var data1 = new google.visualization.DataTable();
+          data1.addColumn('number', 'custom');
           for(let name of nameList){
-            data.addColumn('number', name);
+            data1.addColumn('number', name);
             // console.log(name)  
           }
           
-          let rowsToAdd = [];
+          let rowsToAdd1 = [];
           for(let i = 0; i < 12; i++){
             let rowToAdd = [];
             rowToAdd.push(i+1);
             for(let name of nameList){
               rowToAdd.push(counts[[name, i]] || 0);
             }
-            rowsToAdd.push(rowToAdd);
+            rowsToAdd1.push(rowToAdd);
           }
 
           // console.log(rowsToAdd) 
-          data.addRows(rowsToAdd);
+          data1.addRows(rowsToAdd1);
         
-          var options = {
+          var options1 = {
             chart: {
               title: 'Deployment Frequency',
               subtitle: '',
@@ -60,9 +60,35 @@ export async function drawChart(){
             legend: {position: 'none'}
           };
         
-          var chart = new google.charts.Line(document.getElementById('myChart1'));
+          var chart1 = new google.charts.Line(document.getElementById('myChart11'));
         
-          chart.draw(data, google.charts.Line.convertOptions(options));
+          chart1.draw(data1, google.charts.Line.convertOptions(options1));
+
+
+          var data2 = new google.visualization.DataTable();
+          data2.addColumn('number', 'custom');
+          data2.addColumn('number', 'DeployPerRelease');
+          let rowsToAdd2 = [];
+          for(let i = 0; i < 12; i++){
+            let rowToAdd = [];
+            rowToAdd.push(i+1);
+            rowToAdd.push(rowsToAdd1[i][1]/rowsToAdd1[i][2]);
+            rowsToAdd2.push(rowToAdd);
+          }
+          data2.addRows(rowsToAdd2);
+          var options2 = {
+            chart: {
+              title: 'Deployments Per Release',
+              subtitle: '',
+            },
+            width: 400,
+            height: 250,
+            legend: {position: 'none'}
+          };
+        
+          var chart2 = new google.charts.Line(document.getElementById('myChart12'));
+        
+          chart2.draw(data2, google.charts.Line.convertOptions(options2));
           
       });
     getDefectDensity(owner, repo, ['CI'])
@@ -91,6 +117,9 @@ export async function drawChart(){
 
           let index = 1;
           for (let input of metrics){
+            console.log(input)
+            console.log('metric'+index.toString()+'Name')
+            console.log('metric'+index.toString()+'Value')
             document.getElementById('metric'+index.toString()+'Name').innerHTML = 'metric'+index.toString();
             document.getElementById('metric'+index.toString()+'Value').innerHTML = input.toString();
             index++;
