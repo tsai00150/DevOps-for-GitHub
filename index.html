@@ -47,5 +47,15 @@
       import { drawChart } from './scripts/popup.js'
       drawChart();
     </script>
+    
+    <script type="text/javascript" src="/scripts/jszip.min.js"></script>
+    <script type="module">
+      import { getUnitTest } from './scripts/action.js'; 
+      getUnitTest('tsai00150', 'devops-user-study', ['devops-user-study'], 'build (3.9)', 4, 'Test with unittest')
+          .then(result => {
+              console.log(result); 
+          });
+      
+    </script>    
   </body>
 </html>
