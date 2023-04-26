@@ -52,7 +52,7 @@ export async function drawChart(){
         
           var options1 = {
             chart: {
-              title: 'Deployment Frequency',
+              title: '',
               subtitle: '',
             },
             width: 400,
@@ -65,30 +65,33 @@ export async function drawChart(){
           chart1.draw(data1, google.charts.Line.convertOptions(options1));
 
 
-          var data2 = new google.visualization.DataTable();
-          data2.addColumn('number', 'custom');
-          data2.addColumn('number', 'DeployPerRelease');
-          let rowsToAdd2 = [];
-          for(let i = 0; i < 12; i++){
-            let rowToAdd = [];
-            rowToAdd.push(i+1);
-            rowToAdd.push(rowsToAdd1[i][1]/rowsToAdd1[i][2]);
-            rowsToAdd2.push(rowToAdd);
+
+          
+          let dataSource2 = [['number','Deploy Per Release']]
+          let index = 1;
+          for (let i = 0; i < 12; i++){
+            if(rowsToAdd1[i][1] == 0 || rowsToAdd1[i][2] == 0){
+              dataSource2.push([index+1, 0]);
+
+            }
+            else{
+              dataSource2.push([index+1, rowsToAdd1[i][1]/rowsToAdd1[i][2]]);
+
+            }
+            index++;
           }
-          data2.addRows(rowsToAdd2);
+          console.log(dataSource2)
+          var data2 = google.visualization.arrayToDataTable(dataSource2);
+
           var options2 = {
-            chart: {
-              title: 'Deployments Per Release',
-              subtitle: '',
-            },
-            width: 400,
-            height: 250,
-            legend: {position: 'none'}
+            title: '',
+            bars: 'vertical',
+            legend: {position: 'none'} 
           };
-        
-          var chart2 = new google.charts.Line(document.getElementById('myChart12'));
-        
-          chart2.draw(data2, google.charts.Line.convertOptions(options2));
+
+          var chart2 = new google.charts.Bar(document.getElementById('myChart12'));
+
+          chart2.draw(data2, google.charts.Bar.convertOptions(options2));
           
       });
     getDefectDensity(owner, repo, ['CI'])
