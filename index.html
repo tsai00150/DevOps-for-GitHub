@@ -7,6 +7,7 @@
     <div class="container mt-3" style="width: 400px;" title="A Google Chrome extension that can visualize DevOps evaluation metrics">
         <h1 class="text-center">DevOps Metrics</h1>
     </div>
+    <p style="font-size:14px;">Hover over titles to get more information!</p>
     <div title="The owner of the repository">
       owner: <span id="owner"></span>
     </div>
@@ -16,12 +17,13 @@
     </div>
   
     <div class="container mt-3" style="width: 400px;" title="Deployment Frequency: The deployment and release count within a time frame.">
-        <h2 class="text-center">Deployment frequency</h2>
+        <h2 class="text-center">Deployment Frequency</h2>
     </div>
 
     <div id="myChart11" style="width: 400px; height: 250px"></div>
 
-    <div class="container mt-3" style="width: 400px;" title="Deployments per Release: The Deployments per Release ratio within a time frame.">
+    <div class="container mt-3" style="width: 400px;" title="Deployments per Release: The Deployments per Release ratio within a time frame.
+    Note: if the time frame has no releases, then we simply ignore">
       <h2 class="text-center">Deployments Per Release</h2>
     </div>
 
@@ -31,7 +33,7 @@
 
 
 
-    <div class="container mt-3" style="width: 400px;" title="Number of issues here refers to the software defects observed from the user side. The third metric, number of successful deployments, is trying to mimic the metric “number of software roll back” proposed in papers, as we view it as being automatically “rolled back” by the CI pipeline. While not exactly following the research papers due to API limitations, this should give a sense of the defect densities for repository to newcomers.">
+    <div class="container mt-3" style="width: 400px;" title="The amount of defects observed. ">
         <h2 class="text-center">Defect Density</h2>
     </div>
 
@@ -50,16 +52,137 @@
       <span id="metric3Value"></span>
     </div>
 
-    <div class="container mt-3" style="width: 400px;" title="The time unit on x-axis should be week, month, year, cycle, but for demo purposes, I think time unit = day is better (should save some development time)
-    For y-axis, we can have the following:
-    Failure / total
-    Error / total
-    Failure+Error / total">
+    <div class="container mt-3" style="width: 400px;" title="Considers the result of unit test; requires Python's 
+    unittest framework to work. ">
       <h2 class="text-center">Advanced Defect Density(Test Cases)</h2>
     </div>
     <div style="width: 5px; height: 15px;"></div>
     <div id="myChart21" style="width: 400px; height: 250px"></div>
-    
+    <div class="more info">
+      <details>
+        <summary><b>Input Parameter Info</b></summary>
+          <details>
+            <summary><b>Deployment Frequency</b></summary>
+              <p>The following examples are based on the repository:
+                https://github.com/appditto/natrium_wallet_flutter/actions
+              </p>
+              <dl>
+                <dt><b>Deployment Workflow:</b></dt>
+                <dd>The name of the workflow running when we deploy new code, 
+                  which can be seen on the left-hand side under the "Actions" tab,  
+                  below "All workflows". In the example, it is simply "CI".
+                </dd>
+                <dt><b>Release Workflow:</b></dt>
+                <dd>The name of the workflow that is running when we run a new release, 
+                  which can be seen on the left-hand side under the "Actions" tab,
+                  below "All workflows". 
+                  In the example, it is simply "DEPLOY_RELEASE". 
+                </dd>
+                <dd>
+                  <picture>
+                    <img src="pictures/deployment_workflow.jpg" style="width: 400px;">
+                  </picture>
+                </dd>
+                <dt><b>Time Unit:</b></dt>
+                <dd>
+                  <p>A drop-down list to choose the proper time frame for the x-axis. 
+                    There are 4 options: week, month, year, or custom.
+                  </p>
+                  <p>Week: Starting from today, a week from today is 0, 
+                    and two weeks from today is 1. The farthest deployment 
+                    that gets displayed is 12 weeks from now. 
+                  </p>
+                  <p>Month: Starting from this month up to a year ago, 
+                    display the deployments by month. January is 1, 
+                    February is 2, and so on. 
+                  </p>
+                  <p>Year: Starting from this year up to 12 years ago, display 
+                    the deployments by year. 
+                  </p>
+                  <p>
+                    Custom: Customize your development cycle. Two additional 
+                    dates are needed: the start date of your current 
+                    cycle, and the end date of your current cycle. 
+                    All deployments during your cycle are grouped 0. 
+                    We assume that all cycles have the same number of 
+                    days, and they start immediately after the last one ends. 
+                    Therefore, all deployments during the last development cycle 
+                    (based on your current cycle) are grouped by 1, and so on. 
+                  </p>
+                </dd>
+              </dl>
+          </details>
+          <details>
+            <summary><b>Defect Density</b></summary>
+            <dl>
+              <dt><b>Deployment Workflow: </b></dt> 
+              <dd>The name of the workflow that is 
+                running when we deploy new code , which can be seen on the 
+                left-hand side under the "Actions" tab, below "All workflows". In the example, it 
+                is simply "CI". 
+              </dd>
+              <dd>
+                <picture>
+                  <img src="pictures/deployment_workflow.jpg" style="width: 400px;">
+                </picture>
+              </dd>
+            </dl>
+            <p>Number of issues here refers to the software defects 
+              observed from the user side. The third metric, the number 
+              of successful deployments, is trying to mimic the metric 
+              "number of software rollback" proposed in papers, as we view 
+              it as being automatically "rolled back" by the CI pipeline. 
+              While not exactly following the research papers due to API 
+              limitations, this should give a sense of the defect densities 
+              for repositories to newcomers. 
+            </p>
+          </details>
+          <details>
+            <summary><b>Advanced Defect Density</b></summary>
+            <p>The following metrics require Python's unit testing framework - unittest
+              to work. The workflow must run a unittest Python script, otherwise the 
+              extension cannot interpret the unit test result. 
+              The following example supposes that there is a repository called "devops-user-study"
+            </p>
+            <dl>
+              <dt><b>Workflows:</b></dt>
+              <dd>The name of the workflow that executes the unit test, 
+                which can be seen on the left-hand side under the "Actions" tab, below 
+                "All workflows". In the example, it is simply "devops-user-study". 
+              </dd>
+              <dd>
+                <picture>
+                  <img src="pictures/defect_workflow.jpg" style="width: 400px;">
+                </picture>
+              </dd>
+              <dt><b>Job name:</b></dt>
+              <dd>Click a workflow run, and you can find the name of the job that 
+                executes the unit test. For here, it is "build (3.9)"". 
+              </dd>
+              <dd>
+                <picture>
+                  <img src="pictures/defect_job.jpg" style="width: 400px;">
+                </picture>
+              </dd>
+              <dt><b>Step Order:</b></dt>
+              <dd> Click the job, and there are multiple steps to the job. 
+                Pick the one that executes the unit test, and passes the 
+                ORDER of the step. For here, it is "4". 
+              </dd>
+              <dt><b>Step Name:</b></dt>
+              <dd> The step name that executes the unit test. For here, 
+                it is "Test with unittest". 
+              </dd>
+              <dd>
+                <picture>
+                  <img src="pictures/defect_step.jpg" style="width: 400px;">
+                </picture>
+              </dd>
+            </dl>
+
+          </details>
+    </details>
+    </div>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="module">
