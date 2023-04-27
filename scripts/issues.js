@@ -14,7 +14,6 @@ export async function getIssues(owner, repo){
     });
     let record = await res.json();
     let issues = [];
-    console.log(record);
     for (let issue of record) {
         if (!('pull_request' in issue)){
             issues.push(issue);

@@ -83,7 +83,7 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
                 let runDate = new Date(run.run_started_at);
                 let yearDiff = (today.getFullYear() - runDate.getFullYear());
                 if (yearDiff < 12){
-                    filteredActions.push([run.name, runDate.getFullYear()]);
+                    filteredActions.push([run.name, yearDiff]);
                 }
             }
             break;
@@ -171,4 +171,105 @@ export async function getUnitTest(owner, repo, workflows, jobname, steporder, st
           });
     }
     return unitTests;
+}
+
+export async function drawUnitTest(owner, repo, workflows, jobname, steporder, stepname){
+    getUnitTest(owner, repo, workflows, jobname, steporder, stepname)
+          .then(result => {
+            console.log(result);
+
+            google.charts.load('current', {'packages':['bar']});
+
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                  
+              let dataSource = [['Date', 'Failure / total' , 'Error / total', 'Failure+Error / total']]
+              
+              for (let input of result){
+                const dateAndTime = input[3].split('T');
+                const dateList = dateAndTime[0].split('-');
+                const timeList = dateAndTime[1].split(':');
+                const toShow = dateList[1]+'/'+dateList[2]+' '+timeList[0]+':'+timeList[1];
+
+                const total = input[0]+input[1]+input[2];
+                const FaE = input[1]+input[2];
+                dataSource.push([toShow, input[1]/total, input[2]/total, FaE/total]);
+
+              }
+
+            //   console.log(dataSource)
+              var data = google.visualization.arrayToDataTable(dataSource);
+
+              var options = {
+                chart: {
+                  title: '',
+                  subtitle: '',
+                },
+                bars: 'vertical',
+                legend: {position: 'none'} 
+              };
+
+              var chart = new google.charts.Bar(document.getElementById('myChart21'));
+
+              chart.draw(data, google.charts.Bar.convertOptions(options));
+            }
+
+
+          });
+
+
+          // google.charts.load('current', {'packages':['bar']});
+          
+          // var rawData = [
+          //         [4, 4, 2, '2023-03-01T18:42:43Z'],
+          //         [4, 3, 3, '2023-03-01T18:40:37Z'],
+          //         [4, 3, 2, '2023-03-01T18:37:58Z'],
+          //         [4, 2, 3, '2023-03-01T18:36:14Z'],
+          //         [2, 4, 3, '2023-03-01T18:35:27Z'],
+          //         [2, 0, 0, '2023-03-01T18:26:51Z'],
+          //         [8, 1, 0, '2023-02-28T18:30:17Z'],
+          //         [4, 4, 1, '2023-02-28T18:26:20Z'],
+          //         [6, 0, 1, '2023-02-27T17:38:13Z'],
+          //         [6, 1, 0, '2023-02-27T17:30:58Z'],
+          //         [2, 0, 0, '2023-02-27T17:24:02Z'],
+          //         [2, 0, 0, '2023-02-26T18:34:55Z'],
+          //         [1, 1, 0, '2023-02-26T18:32:36Z']
+          //       ];
+
+          // google.charts.setOnLoadCallback(drawChart);
+
+          // function drawChart() {
+                
+          //   let dataSource = [['Date', 'Failure / total' , 'Error / total', 'Failure+Error / total']]
+            
+          //   for (let input of rawData){
+          //     const dateAndTime = input[3].split('T');
+          //     const dateList = dateAndTime[0].split('-');
+          //     const timeList = dateAndTime[1].split(':');
+          //     const toShow = dateList[1]+'/'+dateList[2]+' '+timeList[0]+':'+timeList[1];
+
+          //     const total = input[0]+input[1]+input[2];
+          //     const FaE = input[1]+input[2];
+          //     dataSource.push([toShow, input[1]/total, input[2]/total, FaE/total]);
+
+          //   }
+
+          //   console.log(dataSource)
+          //   var data = google.visualization.arrayToDataTable(dataSource);
+
+          //   var options = {
+          //     chart: {
+          //       title: 'Advanced Defect Density(Test Cases)',
+          //       subtitle: '',
+          //     },
+          //     bars: 'vertical',
+          //     legend: {position: 'none'} 
+          //   };
+
+          //   var chart = new google.charts.Bar(document.getElementById('myChart21'));
+
+          //   chart.draw(data, google.charts.Bar.convertOptions(options));
+          // }
+
 }

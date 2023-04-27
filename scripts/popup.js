@@ -1,19 +1,26 @@
 import { getDeploymentFrequency } from './action.js';
 import { getDefectDensity } from './issues.js';
 
-export async function drawChart(){
+
+export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null){
     google.charts.load('current', {'packages':['bar', 'line']});
 
-    const owner = 'appditto'
-    const repo = 'natrium_wallet_flutter'
     document.getElementById("owner").innerHTML = owner;
     document.getElementById("repo").innerHTML = repo;
 
-    getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
+    getDeploymentFrequency(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate, endDate)
       .then(filteredActions => {
-          // console.log(filteredActions)
+          console.log(filteredActions)
           // document.getElementById("filteredActions").innerHTML = filteredActions;
           
+          let timeLength = 12;
+          if(timeUnit == 'year'){
+            timeLength = 4;
+          }
+          else{
+
+          }
+
           const counts = {};
           const names = [];
           const variables = [];
@@ -31,14 +38,14 @@ export async function drawChart(){
               valueList.push(counts[variable]);
           }
           var data1 = new google.visualization.DataTable();
-          data1.addColumn('number', 'custom');
+          data1.addColumn('number', timeUnit);
           for(let name of nameList){
             data1.addColumn('number', name);
             // console.log(name)  
           }
           
           let rowsToAdd1 = [];
-          for(let i = 0; i < 12; i++){
+          for(let i = 0; i < timeLength; i++){
             let rowToAdd = [];
             rowToAdd.push(i+1);
             for(let name of nameList){
@@ -54,6 +61,12 @@ export async function drawChart(){
             chart: {
               title: '',
               subtitle: '',
+              hAxis: {
+                viewWindow: {
+                    min: 0,
+                    max: timeUnit+1
+                },
+              },
             },
             width: 400,
             height: 250,
@@ -69,7 +82,7 @@ export async function drawChart(){
           
           let dataSource2 = [['number','Deploy Per Release']]
           let index = 1;
-          for (let i = 0; i < 12; i++){
+          for (let i = 0; i < timeLength; i++){
             if(rowsToAdd1[i][1] == 0 || rowsToAdd1[i][2] == 0){
               dataSource2.push([index+1, 0]);
 
@@ -80,13 +93,17 @@ export async function drawChart(){
             }
             index++;
           }
-          console.log(dataSource2)
+          // console.log(dataSource2)
           var data2 = google.visualization.arrayToDataTable(dataSource2);
 
           var options2 = {
             title: '',
             bars: 'vertical',
-            legend: {position: 'none'} 
+            legend: {position: 'none'},
+            viewWindow: {
+                min: 0,
+                max: timeUnit+1
+            },
           };
 
           var chart2 = new google.charts.Bar(document.getElementById('myChart12'));
@@ -94,9 +111,9 @@ export async function drawChart(){
           chart2.draw(data2, google.charts.Bar.convertOptions(options2));
           
       });
-    getDefectDensity(owner, repo, ['CI'])
+    getDefectDensity(owner, repo, deploymentWorkflow)
       .then(metrics => {
-          // console.log(metrics)
+          console.log(metrics)
           // document.getElementById("metrics").innerHTML = metrics;
 
           // let dataSource = [['metric #','defect density']]
@@ -119,12 +136,13 @@ export async function drawChart(){
           // chart.draw(data, google.charts.Bar.convertOptions(options));
 
           let index = 1;
+          let metricName = ['Issues / Deployments', 'Issues / Sucessful Deployments', 'Sucessful Deployments / Deployments']
           for (let input of metrics){
-            console.log(input)
-            console.log('metric'+index.toString()+'Name')
-            console.log('metric'+index.toString()+'Value')
-            document.getElementById('metric'+index.toString()+'Name').innerHTML = 'metric'+index.toString();
-            document.getElementById('metric'+index.toString()+'Value').innerHTML = input.toString();
+            // console.log(input)
+            // console.log('metric'+index.toString()+'Name')
+            // console.log('metric'+index.toString()+'Value')
+            document.getElementById('metric'+index.toString()+'Name').innerHTML = metricName[index-1];
+            document.getElementById('metric'+index.toString()+'Value').innerHTML = (Math.round(input*1000)/1000).toString();
             index++;
           }
 
