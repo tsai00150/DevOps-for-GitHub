@@ -13,6 +13,14 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
           console.log(filteredActions)
           // document.getElementById("filteredActions").innerHTML = filteredActions;
           
+          let timeLength = 12;
+          if(timeUnit == 'year'){
+            timeLength = 4;
+          }
+          else{
+
+          }
+
           const counts = {};
           const names = [];
           const variables = [];
@@ -30,14 +38,14 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
               valueList.push(counts[variable]);
           }
           var data1 = new google.visualization.DataTable();
-          data1.addColumn('number', 'custom');
+          data1.addColumn('number', timeUnit);
           for(let name of nameList){
             data1.addColumn('number', name);
             // console.log(name)  
           }
           
           let rowsToAdd1 = [];
-          for(let i = 0; i < 12; i++){
+          for(let i = 0; i < timeLength; i++){
             let rowToAdd = [];
             rowToAdd.push(i+1);
             for(let name of nameList){
@@ -53,6 +61,12 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
             chart: {
               title: '',
               subtitle: '',
+              hAxis: {
+                viewWindow: {
+                    min: 0,
+                    max: timeUnit+1
+                },
+              },
             },
             width: 400,
             height: 250,
@@ -68,7 +82,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
           
           let dataSource2 = [['number','Deploy Per Release']]
           let index = 1;
-          for (let i = 0; i < 12; i++){
+          for (let i = 0; i < timeLength; i++){
             if(rowsToAdd1[i][1] == 0 || rowsToAdd1[i][2] == 0){
               dataSource2.push([index+1, 0]);
 
@@ -85,7 +99,11 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
           var options2 = {
             title: '',
             bars: 'vertical',
-            legend: {position: 'none'} 
+            legend: {position: 'none'},
+            viewWindow: {
+                min: 0,
+                max: timeUnit+1
+            },
           };
 
           var chart2 = new google.charts.Bar(document.getElementById('myChart12'));
