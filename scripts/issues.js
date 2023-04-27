@@ -1,7 +1,17 @@
 import { getActions } from './action.js';
 export async function getIssues(owner, repo){
     /*https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues*/
-    let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/issues`);
+    
+    let config = await fetch ('../config.json');
+    config = await config.json();
+
+    let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/issues`, {
+        headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": `Bearer ${config.token}`,
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    });
     let record = await res.json();
     let issues = [];
     console.log(record);
@@ -13,7 +23,13 @@ export async function getIssues(owner, repo){
 
     let page = 2
     while (record.length === 30){
-        let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/issues?page=${page}`);
+        let res = await fetch (`https://api.github.com/repos/${owner}/${repo}/issues?page=${page}`, {
+        headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": `Bearer ${config.token}`,
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    });
         record = await res.json();
         for (let issue of record) {
             if (!('pull_request' in issue)){
