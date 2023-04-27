@@ -1,17 +1,16 @@
 import { getDeploymentFrequency } from './action.js';
 import { getDefectDensity } from './issues.js';
 
-export async function drawChart(){
+
+export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null){
     google.charts.load('current', {'packages':['bar', 'line']});
 
-    const owner = 'appditto'
-    const repo = 'natrium_wallet_flutter'
     document.getElementById("owner").innerHTML = owner;
     document.getElementById("repo").innerHTML = repo;
 
-    getDeploymentFrequency(owner, repo, ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'))
+    getDeploymentFrequency(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null)
       .then(filteredActions => {
-          // console.log(filteredActions)
+          console.log(filteredActions)
           // document.getElementById("filteredActions").innerHTML = filteredActions;
           
           const counts = {};
@@ -80,7 +79,7 @@ export async function drawChart(){
             }
             index++;
           }
-          console.log(dataSource2)
+          // console.log(dataSource2)
           var data2 = google.visualization.arrayToDataTable(dataSource2);
 
           var options2 = {
@@ -94,9 +93,9 @@ export async function drawChart(){
           chart2.draw(data2, google.charts.Bar.convertOptions(options2));
           
       });
-    getDefectDensity(owner, repo, ['CI'])
+    getDefectDensity(owner, repo, deploymentWorkflow)
       .then(metrics => {
-          // console.log(metrics)
+          console.log(metrics)
           // document.getElementById("metrics").innerHTML = metrics;
 
           // let dataSource = [['metric #','defect density']]
@@ -120,9 +119,9 @@ export async function drawChart(){
 
           let index = 1;
           for (let input of metrics){
-            console.log(input)
-            console.log('metric'+index.toString()+'Name')
-            console.log('metric'+index.toString()+'Value')
+            // console.log(input)
+            // console.log('metric'+index.toString()+'Name')
+            // console.log('metric'+index.toString()+'Value')
             document.getElementById('metric'+index.toString()+'Name').innerHTML = 'metric'+index.toString();
             document.getElementById('metric'+index.toString()+'Value').innerHTML = input.toString();
             index++;
