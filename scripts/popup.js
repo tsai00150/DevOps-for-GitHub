@@ -118,12 +118,13 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
           // chart.draw(data, google.charts.Bar.convertOptions(options));
 
           let index = 1;
+          let metricName = ['Issues / Deployments', 'Issues / Sucessful Deployments', 'Sucessful Deployments / Deployments']
           for (let input of metrics){
             // console.log(input)
             // console.log('metric'+index.toString()+'Name')
             // console.log('metric'+index.toString()+'Value')
-            document.getElementById('metric'+index.toString()+'Name').innerHTML = 'metric'+index.toString();
-            document.getElementById('metric'+index.toString()+'Value').innerHTML = input.toString();
+            document.getElementById('metric'+index.toString()+'Name').innerHTML = metricName[index-1];
+            document.getElementById('metric'+index.toString()+'Value').innerHTML = (Math.round(input*1000)/1000).toString();
             index++;
           }
 
