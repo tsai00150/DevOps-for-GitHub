@@ -8,7 +8,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
     document.getElementById("owner").innerHTML = owner;
     document.getElementById("repo").innerHTML = repo;
 
-    getDeploymentFrequency(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null)
+    getDeploymentFrequency(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate, endDate)
       .then(filteredActions => {
           console.log(filteredActions)
           // document.getElementById("filteredActions").innerHTML = filteredActions;

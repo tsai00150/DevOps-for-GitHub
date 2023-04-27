@@ -83,7 +83,7 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
                 let runDate = new Date(run.run_started_at);
                 let yearDiff = (today.getFullYear() - runDate.getFullYear());
                 if (yearDiff < 12){
-                    filteredActions.push([run.name, runDate.getFullYear()]);
+                    filteredActions.push([run.name, yearDiff]);
                 }
             }
             break;
