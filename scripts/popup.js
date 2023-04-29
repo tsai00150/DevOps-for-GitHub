@@ -47,7 +47,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
           let rowsToAdd1 = [];
           for(let i = 0; i < timeLength; i++){
             let rowToAdd = [];
-            rowToAdd.push(i+1);
+            rowToAdd.push(i);
             for(let name of nameList){
               rowToAdd.push(counts[[name, i]] || 0);
             }
@@ -64,7 +64,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
               hAxis: {
                 viewWindow: {
                     min: 0,
-                    max: timeUnit+1
+                    max: timeUnit
                 },
               },
             },
@@ -102,7 +102,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
             legend: {position: 'none'},
             viewWindow: {
                 min: 0,
-                max: timeUnit+1
+                max: timeUnit
             },
           };
 
