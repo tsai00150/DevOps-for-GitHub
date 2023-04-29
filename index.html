@@ -9,11 +9,11 @@
     </div>
     <p style="font-size:14px;">Hover over titles to get more information!</p>
     <div title="The owner of the repository">
-      owner: <span id="owner"></span>
+      Owner: <span id="owner"></span>
     </div>
     <div style="width: 5px; height: 5px;"></div>
     <div title="The name of the repository">
-      repo: <span id="repo"></span>
+      Repo: <span id="repo"></span>
     </div>
   
     <div class="container mt-3" style="width: 400px;" title="Deployment Frequency: The deployment and release count within a time frame.">
@@ -58,9 +58,13 @@
     </div>
     <div style="width: 5px; height: 15px;"></div>
     <div id="myChart21" style="width: 400px; height: 250px"></div>
+
+
+    
+    <div style="width: 5px; height: 15px;"></div>
     <div class="more info">
       <details>
-        <summary><b>Input Parameter Info</b></summary>
+        <summary><b>More Input Parameter Info</b></summary>
           <details>
             <summary><b>Deployment Frequency</b></summary>
               <p>The following examples are based on the repository:
@@ -185,114 +189,63 @@
     </details>
     </div>
 
+    <div>
+
+      <h2 class="text-center">Update Deployment Frequency & Defect Density</h2>
+      Repo: <input type="string" id="repoField1" value="appditto"><br> 
+      Owner: <input type="string" id="ownerField1" value="natrium_wallet_flutter"><br>
+      Deployment Workflow: <input type="string" id="deploymentWorkflowField" value="CI"><br> 
+      Release Workflow: <input type="string" id="releaseWorkflowField" value="DEPLOY_RELEASE"><br> 
+      TimeUnit: <input type="string" id="timeUnitField" value="custom"><br>
+      Start Date: <input type="string" id="startDateField" value="2022-08-01T14:27:38Z"><br> 
+      End Date: <input type="string" id="endDateField" value="2022-10-01T14:27:38Z"><br>  
+      <button onclick="drawChart(
+        document.getElementById('repoField1').value,
+        document.getElementById('ownerField1').value,
+        [document.getElementById('deploymentWorkflowField').value],
+        [document.getElementById('releaseWorkflowField').value],
+        document.getElementById('timeUnitField').value,
+        new Date(document.getElementById('startDateField').value),
+        new Date(document.getElementById('endDateField').value))">Update</button>
+    </div>
+      
+    <div>
+    
+      <h2 class="text-center">Update Advanced Defect Density</h2>
+      Repo: <input type="string" id="repoField2" value="tsai00150"><br> 
+      Owner: <input type="string" id="ownerField2" value="devops-user-study"><br>
+      Workflows: <input type="string" id="workflowsField" value="devops-user-study"><br> 
+      Job Name: <input type="string" id="jobnameField" value="build (3.9)"><br> 
+      Step Order: <input type="number" id="steporderField" value="4"><br>
+      Step Name: <input type="string" id="stepnameField" value="Test with unittest"><br>  
+      <button onclick="drawUnitTest(
+        document.getElementById('repoField2').value,
+        document.getElementById('ownerField2').value,
+        [document.getElementById('workflowsField').value],
+        document.getElementById('jobnameField').value,
+        document.getElementById('steporderField').value,
+        document.getElementById('stepnameField').value,
+        )">Update</button>
+    </div>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="module">
       import { drawChart } from './scripts/popup.js'
-      drawChart();
+      drawChart('appditto', 'natrium_wallet_flutter', ['CI'], ['DEPLOY_RELEASE'], 'custom', new Date('2022-08-01T14:27:38Z'), new Date('2022-10-01T14:27:38Z'));
+      window.drawChart=drawChart;
+      // function updateLineChart(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null) {
+      //     drawChart(owner, repo, deploymentWorkflow, releaseWorkflow, timeUnit, startDate=null, endDate=null);
+      //   }
     </script>
     
     <script type="text/javascript" src="/scripts/jszip.min.js"></script>
     <script type="module">
-      import { getUnitTest } from './scripts/action.js'; 
-      getUnitTest('tsai00150', 'devops-user-study', ['devops-user-study'], 'build (3.9)', 4, 'Test with unittest')
-          .then(result => {
-            // console.log(result);
-
-            google.charts.load('current', {'packages':['bar']});
-
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                  
-              let dataSource = [['Date', 'Failure / total' , 'Error / total', 'Failure+Error / total']]
-              
-              for (let input of result){
-                const dateAndTime = input[3].split('T');
-                const dateList = dateAndTime[0].split('-');
-                const timeList = dateAndTime[1].split(':');
-                const toShow = dateList[1]+'/'+dateList[2]+' '+timeList[0]+':'+timeList[1];
-
-                const total = input[0]+input[1]+input[2];
-                const FaE = input[1]+input[2];
-                dataSource.push([toShow, input[1]/total, input[2]/total, FaE/total]);
-
-              }
-
-              console.log(dataSource)
-              var data = google.visualization.arrayToDataTable(dataSource);
-
-              var options = {
-                chart: {
-                  title: '',
-                  subtitle: '',
-                },
-                bars: 'vertical',
-                legend: {position: 'none'} 
-              };
-
-              var chart = new google.charts.Bar(document.getElementById('myChart21'));
-
-              chart.draw(data, google.charts.Bar.convertOptions(options));
-            }
-
-
-          });
-
-
-          // google.charts.load('current', {'packages':['bar']});
-          
-          // var rawData = [
-          //         [4, 4, 2, '2023-03-01T18:42:43Z'],
-          //         [4, 3, 3, '2023-03-01T18:40:37Z'],
-          //         [4, 3, 2, '2023-03-01T18:37:58Z'],
-          //         [4, 2, 3, '2023-03-01T18:36:14Z'],
-          //         [2, 4, 3, '2023-03-01T18:35:27Z'],
-          //         [2, 0, 0, '2023-03-01T18:26:51Z'],
-          //         [8, 1, 0, '2023-02-28T18:30:17Z'],
-          //         [4, 4, 1, '2023-02-28T18:26:20Z'],
-          //         [6, 0, 1, '2023-02-27T17:38:13Z'],
-          //         [6, 1, 0, '2023-02-27T17:30:58Z'],
-          //         [2, 0, 0, '2023-02-27T17:24:02Z'],
-          //         [2, 0, 0, '2023-02-26T18:34:55Z'],
-          //         [1, 1, 0, '2023-02-26T18:32:36Z']
-          //       ];
-
-          // google.charts.setOnLoadCallback(drawChart);
-
-          // function drawChart() {
-                
-          //   let dataSource = [['Date', 'Failure / total' , 'Error / total', 'Failure+Error / total']]
-            
-          //   for (let input of rawData){
-          //     const dateAndTime = input[3].split('T');
-          //     const dateList = dateAndTime[0].split('-');
-          //     const timeList = dateAndTime[1].split(':');
-          //     const toShow = dateList[1]+'/'+dateList[2]+' '+timeList[0]+':'+timeList[1];
-
-          //     const total = input[0]+input[1]+input[2];
-          //     const FaE = input[1]+input[2];
-          //     dataSource.push([toShow, input[1]/total, input[2]/total, FaE/total]);
-
-          //   }
-
-          //   console.log(dataSource)
-          //   var data = google.visualization.arrayToDataTable(dataSource);
-
-          //   var options = {
-          //     chart: {
-          //       title: 'Advanced Defect Density(Test Cases)',
-          //       subtitle: '',
-          //     },
-          //     bars: 'vertical',
-          //     legend: {position: 'none'} 
-          //   };
-
-          //   var chart = new google.charts.Bar(document.getElementById('myChart21'));
-
-          //   chart.draw(data, google.charts.Bar.convertOptions(options));
-          // }
-
-      
-    </script>    
+      import { drawUnitTest } from './scripts/action.js'; 
+      drawUnitTest('tsai00150', 'devops-user-study', ['devops-user-study'], 'build (3.9)', 4, 'Test with unittest')
+      window.drawUnitTest=drawUnitTest;
+      // function updateBarChart(owner, repo, workflows, jobname, steporder, stepname) {
+      //     drawUnitTest(owner, repo, workflows, jobname, steporder, stepname);
+      //   }
+    </script>
   </body>
 </html>
