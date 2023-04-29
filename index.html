@@ -9,11 +9,11 @@
     </div>
     <p style="font-size:14px;">Hover over titles to get more information!</p>
     <div title="The owner of the repository">
-      owner: <span id="owner"></span>
+      Owner: <span id="owner"></span>
     </div>
     <div style="width: 5px; height: 5px;"></div>
     <div title="The name of the repository">
-      repo: <span id="repo"></span>
+      Repo: <span id="repo"></span>
     </div>
   
     <div class="container mt-3" style="width: 400px;" title="Deployment Frequency: The deployment and release count within a time frame.">
@@ -190,14 +190,14 @@
 
     <div>
 
-      <h2 class="text-center">Update Line Chart</h2>
-      repo: <input type="string" id="repoField1" value="appditto"><br> 
-      owner: <input type="string" id="ownerField1" value="natrium_wallet_flutter"><br>
-      deploymentWorkflow: <input type="string" id="deploymentWorkflowField" value="CI"><br> 
-      releaseWorkflow: <input type="string" id="releaseWorkflowField" value="DEPLOY_RELEASE"><br> 
-      timeUnit: <input type="string" id="timeUnitField" value="custom"><br>
-      startDate: <input type="string" id="startDateField" value="2022-08-01T14:27:38Z"><br> 
-      endDate: <input type="string" id="endDateField" value="2022-10-01T14:27:38Z"><br>  
+      <h2 class="text-center">Update Deployment Frequency & Defect Density</h2>
+      Repo: <input type="string" id="repoField1" value="appditto"><br> 
+      Owner: <input type="string" id="ownerField1" value="natrium_wallet_flutter"><br>
+      Deployment Workflow: <input type="string" id="deploymentWorkflowField" value="CI"><br> 
+      Release Workflow: <input type="string" id="releaseWorkflowField" value="DEPLOY_RELEASE"><br> 
+      TimeUnit: <input type="string" id="timeUnitField" value="custom"><br>
+      Start Date: <input type="string" id="startDateField" value="2022-08-01T14:27:38Z"><br> 
+      End Date: <input type="string" id="endDateField" value="2022-10-01T14:27:38Z"><br>  
       <button onclick="drawChart(
         document.getElementById('repoField1').value,
         document.getElementById('ownerField1').value,
@@ -210,13 +210,13 @@
       
     <div>
     
-      <h2 class="text-center">Update Bar Chart</h2>
-      repo: <input type="string" id="repoField2" value="tsai00150"><br> 
-      owner: <input type="string" id="ownerField2" value="devops-user-study"><br>
-      workflows: <input type="string" id="workflowsField" value="devops-user-study"><br> 
-      jobname: <input type="string" id="jobnameField" value="build (3.9)"><br> 
-      steporder: <input type="number" id="steporderField" value="4"><br>
-      stepname: <input type="string" id="stepnameField" value="Test with unittest"><br>  
+      <h2 class="text-center">Update Advanced Defect Density</h2>
+      Repo: <input type="string" id="repoField2" value="tsai00150"><br> 
+      Owner: <input type="string" id="ownerField2" value="devops-user-study"><br>
+      Workflows: <input type="string" id="workflowsField" value="devops-user-study"><br> 
+      Job Name: <input type="string" id="jobnameField" value="build (3.9)"><br> 
+      Step Order: <input type="number" id="steporderField" value="4"><br>
+      Step Name: <input type="string" id="stepnameField" value="Test with unittest"><br>  
       <button onclick="drawUnitTest(
         document.getElementById('repoField2').value,
         document.getElementById('ownerField2').value,
