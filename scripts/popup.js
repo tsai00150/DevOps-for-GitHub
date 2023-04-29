@@ -81,7 +81,7 @@ export async function drawChart(owner, repo, deploymentWorkflow, releaseWorkflow
 
           
           let dataSource2 = [['number','Deploy Per Release']]
-          let index = 1;
+          let index = 0;
           for (let i = 0; i < timeLength; i++){
             if(rowsToAdd1[i][1] == 0 || rowsToAdd1[i][2] == 0){
               dataSource2.push([index, 0]);
