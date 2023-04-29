@@ -50,8 +50,8 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
     @param {date} endDate - if timeUnit == custom, need to include the end date of the current development cycle
     @returns {array} each action is a list, format [workflow name, time representation on the x axis]
     week - current week == 0, last week == 1, ...
-    month - January == 1, Feburary == 2, ...
-    year - The actual year of the action
+    month - current month == 0, current month == 1, ...
+    year - current year == 0, last year == 1, ...
     custom - current cycle == 0, last cycle == 1, ...
      */
     let actions = await getActions(owner, repo, deploymentWorkflow.concat(releaseWorkflow));
@@ -64,7 +64,7 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
                 let runDate = new Date(run.run_started_at);
                 let weekNum = Math.floor(((today-runDate)/(1000*60*60*24)) / 7);
                 if (weekNum < 12){
-                    filteredActions.push([run.name, 11 - weekNum]);
+                    filteredActions.push([run.name, weekNum]);
                 }
             }
             break;
@@ -74,7 +74,7 @@ export async function getDeploymentFrequency(owner, repo, deploymentWorkflow, re
                 let monthDiff = ((today.getFullYear() - runDate.getFullYear())*12 + 
                     today.getMonth() - runDate.getMonth());
                 if (monthDiff < 12){
-                    filteredActions.push([run.name, runDate.getMonth()+1]);
+                    filteredActions.push([run.name, monthDiff]);
                 }
             }
             break;
